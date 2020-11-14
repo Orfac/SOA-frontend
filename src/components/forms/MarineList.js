@@ -1,9 +1,11 @@
 import React, {Component, useState} from 'react';
 import SpaceMarine from "../SpaceMarine";
 import {xml2json} from "xml-js";
+import Config from '../../api/Config.json';
 import './FormStyle.css';
-const Get = () => {
-    let url = "http://localhost:8080/marines";
+import {getMarines} from "../../api/utils";
+const MarineList = () => {
+    let url = Config.Url;
     const [marines, setMarines] = useState([]);
     const [pageSize, setPageSize] = useState("");
     const [pageNumber, setPageNumber] = useState("");
@@ -22,38 +24,11 @@ const Get = () => {
         } else {
             finalUrl = url;
         }
-        let response = await fetch(finalUrl, {
-            method: 'GET',
-        });
-        let responseText = await response.text();
-        let convertedJson = xml2json(responseText, {compact: true});
-        convertedJson = convertedJson.replace(/_/g, "");
-        let parsedMarinesMap = JSON.parse(convertedJson).SpaceMarineCollection;
-        if (Object.keys(parsedMarinesMap).length === 0){
-            setErrorMessage("There are 0 space marines")
-            return;
+        let updatedMarines = await getMarines(finalUrl);
+        if (updatedMarines.length < 1) {
+            setErrorMessage("There are 0 space marines");
+            return
         }
-        let parsedMarines = parsedMarinesMap.SpaceMarine;
-        let updatedMarines = parsedMarines.map(
-            marine => {
-
-                let chapter = marine.chapter;
-                chapter.name = chapter.name.text;
-                chapter.parentLegion = chapter.parentLegion.text;
-                chapter.marinesCount = chapter.marinesCount.text;
-                chapter.world = chapter.world.text;
-                marine.chapter = chapter;
-
-                marine.category = marine.category.text;
-                marine.coordinates = {x: marine.coordinates.x.text, y:marine.coordinates.y.text};
-                marine.creationDate = marine.creationDate.text;
-                marine.health = marine.health.text;
-                marine.meleeWeapon = marine.meleeWeapon.text;
-                marine.heartCount = marine.heartCount.text;
-                marine.name = marine.name.text;
-                return marine
-            }
-        )
         setMarines(updatedMarines);
     }
 
@@ -90,4 +65,4 @@ const Get = () => {
 
 }
 
-export default Get;
+export default MarineList;

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 const Features = () => {
 
-    return (
+    return ( 
         <div>
             <h2>
                 Features
