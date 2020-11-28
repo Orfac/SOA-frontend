@@ -29,6 +29,12 @@
   padding: 10px;
 }
 
+.little-error-message{
+  color: red;
+  font-size: 15px;
+  padding: 10px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

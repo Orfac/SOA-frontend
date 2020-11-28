@@ -17,7 +17,8 @@ code {
   font-size: 25px;
   border-radius: 15px;
   background: #d9face;
-
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .cool-button:hover{

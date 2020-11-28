@@ -1,14 +1,37 @@
 import {xml2json} from "xml-js";
+import Config from '../api/Config.json';
 
-export function deleteById() {
 
+export async function deleteById(id) {
+    let url = Config.Url + "/" + id;
+    let response = await fetch(url ,{
+        method: "DELETE"
+    });
 }
 export async function getMarines(finalUrl) {
-    let response = await fetch(finalUrl, {
+    return await fetch(finalUrl, {
         method: 'GET',
+    })
+
+
+}
+
+export async function updateById(id, text){
+    let url = Config.Url + "/" + id;
+    return  await fetch(url ,{
+        method: "PUT",
+        body: text
     });
-    let responseText = await response.text();
-    let convertedJson = xml2json(responseText, {compact: true});
+}
+export async function save(text){
+    let url = Config.Url;
+    return await fetch(url, {
+        method: "POST",
+        body: text
+    });
+}
+export async function handleXml(text){
+    let convertedJson = xml2json(text, {compact: true});
     convertedJson = convertedJson.replace(/_/g, "");
     let parsedMarinesMap = JSON.parse(convertedJson).SpaceMarineCollection;
     if (Object.keys(parsedMarinesMap).length === 0){
@@ -18,6 +41,7 @@ export async function getMarines(finalUrl) {
     if (!Array.isArray(parsedMarines)){
         parsedMarines = [parsedMarines];
     }
+    let i = 0;
     return parsedMarines.map(
         marine => {
 
@@ -36,7 +60,18 @@ export async function getMarines(finalUrl) {
             marine.meleeWeapon = marine.meleeWeapon.text;
             marine.heartCount = marine.heartCount.text;
             marine.name = marine.name.text;
+
+            marine.xmlText = getSpaceMarineXMLById(text, i);
+            i++;
             return marine
         }
     )
+}
+function getSpaceMarineXMLById(xmlText, id) {
+    let domParser = new DOMParser();
+    let dom = domParser.parseFromString(xmlText, "application/xml");
+
+    let elements = dom.childNodes[0].getElementsByTagName("SpaceMarine");
+
+    return elements[id].outerHTML;
 }
