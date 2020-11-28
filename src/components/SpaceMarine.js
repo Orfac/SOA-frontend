@@ -11,7 +11,6 @@ const SpaceMarine = ({marine, callForUpdate}) => {
 
     function updateXml(event) {
         setUpdateValue(event.target.value);
-
     }
 
     const sendDelete = async () => {

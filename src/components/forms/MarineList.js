@@ -5,7 +5,7 @@ import './FormStyle.css';
 import {getMarines, handleXml, save} from "../../api/utils";
 
 const MarineList = () => {
-    let url = Config.Url;
+    let url = Config.Url + "/marines";
     const [marines, setMarines] = useState([]);
     const [pageSize, setPageSize] = useState("");
     const [pageNumber, setPageNumber] = useState("");

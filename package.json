@@ -2,6 +2,7 @@
   "name": "lab1-front",
   "version": "0.1.0",
   "private": true,
+  "homepage": "~s242395",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",

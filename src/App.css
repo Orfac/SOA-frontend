@@ -69,3 +69,12 @@
     transform: rotate(360deg);
   }
 }
+.delete{
+  background-color: #f65e5e;
+  color: white;
+}
+.delete:hover{
+  background-color: #f12222;
+  color: white;
+  cursor: pointer;
+}

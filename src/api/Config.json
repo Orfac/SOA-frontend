@@ -1,4 +1,4 @@
 {
-  "Url": "http://localhost:8080/marines",
-  "Helios_Url": "http://localhost:8092/lab1/marines"
+  "Helios_Url": "http://localhost:8080",
+  "Url": "http://localhost:8092/lab1"
 }
