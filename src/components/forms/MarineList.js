@@ -9,7 +9,8 @@ const MarineList = () => {
     const [marines, setMarines] = useState([]);
     const [pageSize, setPageSize] = useState("");
     const [pageNumber, setPageNumber] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [message, setMessage] = useState("");
+    const [isError, setIsError] = useState(false);
     const [isAddOpen, setAddOpen] = useState(false);
     const [addValue, setAddValue] = useState("");
 
@@ -27,7 +28,8 @@ const MarineList = () => {
     }
 
     const updateMarines = async () => {
-        setErrorMessage("");
+        setMessage("");
+        setIsError(false);
         setAddOpen(false);
         let finalUrl = url + "?";
         if (pageSize && pageNumber) {
@@ -37,7 +39,7 @@ const MarineList = () => {
             finalUrl += "&" + filter;
         }
         if (sort) {
-            finalUrl += "&sortBy" + sort;
+            finalUrl += "&sortBy=" + sort;
         }
         let updatedMarinesResponse = await getMarines(finalUrl);
         let updatedMarines = [];
@@ -45,10 +47,12 @@ const MarineList = () => {
         if (updatedMarinesResponse.status === 200) {
             updatedMarines = await handleXml(responseText);
             if (updatedMarines.length < 1) {
-                setErrorMessage("There are 0 space marines");
+                setIsError(true);
+                setMessage("There are 0 space marines");
             }
         } else {
-            setErrorMessage(responseText);
+            setIsError(true);
+            setMessage(responseText);
         }
 
         setMarines(updatedMarines);
@@ -58,14 +62,29 @@ const MarineList = () => {
     const inputPageNumber = event => setPageNumber(event.currentTarget.value);
     const openAdd = () => {
         setAddOpen(!isAddOpen);
-        setErrorMessage("");
+
         setPageNumber("");
         setPageSize("");
         setSort("");
         setFilter("");
+        setIsError(false);
+        setMessage("");
     };
     const updateNew = event => setAddValue(event.target.value);
-    const sendNew = () => save(addValue);
+    const sendNew = async () => {
+        setMessage("");
+        setIsError(false);
+        let rawResponse = await save(addValue);
+        if (rawResponse.status === 201) {
+            setMessage("New marine added!");
+        } else {
+            if (rawResponse.status === 400) {
+                setIsError(true);
+                let response = await rawResponse.text();
+                setMessage(response ? response : "Cannot add this marine, please rewrite it in xml style");
+            }
+        }
+    }
     const inputSort = event => setSort(event.target.value);
     const inputFilter = event => setFilter(event.target.value);
 
@@ -113,7 +132,7 @@ const MarineList = () => {
                 </div> : renderMarines()}
             </div>
 
-            {errorMessage ? <div className="error-message">{errorMessage}</div> : ""}
+            {message ? <div className={isError?"error-message":"success"}>{message}</div> : ""}
 
 
         </div>

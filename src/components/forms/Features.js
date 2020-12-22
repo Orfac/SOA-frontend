@@ -19,7 +19,7 @@ const Features = () => {
     }
     const renderMarines = () => {
         return marines.map(
-            (marine) => <SpaceMarine marine={marine} callForUpdate={getMarines()}/>
+            (marine) => <SpaceMarine marine={marine} callForUpdate={getMarines}/>
         )
     }
 

@@ -21,14 +21,21 @@ export async function updateById(id, text){
     let url = Config.Url + "/marines" + "/" + id;
     return  await fetch(url ,{
         method: "PUT",
-        body: text
+        body: text,
+        headers: {
+            "Content-Type": "application/xml"
+        }
+
     });
 }
 export async function save(text){
     let url = Config.Url + "/marines";
     return await fetch(url, {
         method: "POST",
-        body: text
+        body: text,
+        headers: {
+            "Content-Type": "application/xml"
+        }
     });
 }
 export async function handleXml(text){
@@ -59,7 +66,7 @@ export async function handleXml(text){
             marine.creationDate = marine.creationDate? marine.creationDate.text : "";
             marine.health = marine.health ? marine.health.text : "";
             marine.meleeWeapon = marine.meleeWeapon? marine.meleeWeapon.text : "";
-            marine.heartCount = marine.heartCount? marine.meleeWeapon.text : "";
+            marine.heartCount = marine.heartCount? marine.heartCount.text : "";
             marine.name = marine.name? marine.meleeWeapon.text : "";
 
             marine.xmlText = getSpaceMarineXMLById(text, i);
